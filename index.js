@@ -1,12 +1,21 @@
 const express = require('express');
 const morgan = require('morgan');
-const bodyParser = require('body-parser'),
+const bodyParser = require('body-parser');
 
 const app = express();
 // utilize morgan
 app.use(morgan('common'));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
+let topMovies = [
+    {
+        title: "Howl's Moving Castle",
+        production: "Studio Ghibli",
+        director: "Hayao Miyazaki",
+        genre: "Animation",
+        actors: " Christian Bale,",
+    }
+]
 app.get("/movies", (req, res) => {
     res.json(topMovies);
 });
