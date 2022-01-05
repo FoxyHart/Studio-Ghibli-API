@@ -30,5 +30,5 @@ app.use((err, req, res, next) => {
     res.status(500).send("Oops, something is not working right!");
 });
 app.listen(8080, () => {
-    console.log("Your app is lestening on port 8080.")
+    console.log("Your app is listening on port 8080.")
 });
