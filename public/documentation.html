@@ -6,7 +6,72 @@
     </head>
     <body>
         <h1>Studio Ghibli API</h1>
-        <p> This API will be for Studio Ghibli films.</p>
+        <p> This API will be for Studio Ghibli films. It will be able to search movie titles, directors, and genres. 
+            Users will be able to create a their own profile, change their user information and make a list of their favorite films.
+        </p>
+        <table>
+            <tr>
+              <th>Request</th>
+              <th>URL</th>
+              <th>HTTP Method</th>
+              <th>Response</th>
+            </tr>
+            <tr>
+              <td>Return a list of ALL movies</td>
+              <td>'/movies'</td>
+              <td>GET</td>
+              <td>Returns a JSON list of movies.</td>
+            </tr>     
+            <tr>
+              <td>Return data about a movie by title</td>
+              <td>'/movies/:title'</td>
+              <td>GET</td>
+              <td>Returns a JSON data about a specific movie.</td>
+            </tr>     
+            <tr>
+              <td>Return data about a director</td>
+              <td>"/movies/directors/:directorName"</td>
+              <td>GET</td>
+              <td>Returns a JSON data about the director.</td>
+            </tr>     
+            <tr>
+              <td>Return data about a genre description by genre name.</td>
+              <td>"/movies/genre/:genreName"</td>
+              <td>GET</td>
+              <td>Returns a JSON data with a description of that genre.</td>
+            </tr> 
+            <tr>
+              <td>Allow new users to register</td>
+              <td>/users</td>
+              <td>POST</td>
+              <td>Will add new user to JSON object.</td>
+            </tr>
+            <tr>
+              <td>Allow users to update their user information</td>
+              <td>"/users/:id"</td>
+              <td>PUT</td>
+              <td>Returns message that user data was updated.</td>
+            </tr>     
+            <tr>
+              <td>Allow users to add a movie to their list of favorites</td>
+              <td>"/users/:id/:movieTitle"</td>
+              <td>PUT</td>
+              <td>Returns message affirming movie was added successfully.</td>
+            </tr>
+            <tr>
+              <td>Allow users to remove a movie from their list of favorites</td>
+              <td>"/users/:id/:movietitle"</td>
+              <td>DELETE</td>
+              <td>Returns message affirming movie was removed successfully.</td>
+            </tr>
+            <tr>
+              <td>Allow users to remove their profile</td>
+              <td>/users/:id</td>
+              <td>DELETE</td>
+              <td>Return a message affirming that the user was deleted.</td>
+            </tr>
+          </table>
     </body>
 </html>
+
 
