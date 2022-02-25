@@ -24,19 +24,19 @@
             </tr>     
             <tr>
               <td>Return data about a movie by title</td>
-              <td>'/movies/:title'</td>
+              <td>'/movies/:Title'</td>
               <td>GET</td>
               <td>Returns a JSON data about a specific movie.</td>
             </tr>     
             <tr>
               <td>Return data about a director</td>
-              <td>"/movies/directors/:directorName"</td>
+              <td>"/directors/:directorName"</td>
               <td>GET</td>
               <td>Returns a JSON data about the director.</td>
             </tr>     
             <tr>
               <td>Return data about a genre description by genre name.</td>
-              <td>"/movies/genre/:genreName"</td>
+              <td>"genre/:genre"</td>
               <td>GET</td>
               <td>Returns a JSON data with a description of that genre.</td>
             </tr> 
@@ -45,28 +45,33 @@
               <td>/users</td>
               <td>POST</td>
               <td>Will add new user to JSON object.</td>
+              <td>Username:
+                Password:
+                Email:
+                Birthday:xx-xx-xxxx
+              </td>
             </tr>
             <tr>
               <td>Allow users to update their user information</td>
-              <td>"/users/:id"</td>
+              <td>"/users/:Username"</td>
               <td>PUT</td>
               <td>Returns message that user data was updated.</td>
             </tr>     
             <tr>
               <td>Allow users to add a movie to their list of favorites</td>
-              <td>"/users/:id/:movieTitle"</td>
+              <td>"/users/:Username/movies/:MovieID"</td>
               <td>PUT</td>
               <td>Returns message affirming movie was added successfully.</td>
             </tr>
             <tr>
               <td>Allow users to remove a movie from their list of favorites</td>
-              <td>"/users/:id/:movietitle"</td>
+              <td>"/users/:Username/movies/:MovieID"</td>
               <td>DELETE</td>
               <td>Returns message affirming movie was removed successfully.</td>
             </tr>
             <tr>
               <td>Allow users to remove their profile</td>
-              <td>/users/:id</td>
+              <td>/users/:Username</td>
               <td>DELETE</td>
               <td>Return a message affirming that the user was deleted.</td>
             </tr>
