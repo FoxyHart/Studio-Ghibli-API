@@ -7,113 +7,39 @@ const Models = require('./models');
 
 const Movies = Models.Movie;
 const Users = Models.User;
+
+const { check, validationResult } = require('express-validator');
+
 mongoose.connect('mongodb://localhost:27017/StudioGhibliDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
 const app = express();
-// utilize morgan
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 //use auth endpoints
 let auth = require('./auth')(app);
+
 //use passport after auth
 const passport = require('passport');
 require('./passport')
 
-//Create user
-app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOne({ Username: req.body.Username })
-      .then((user) => {
-        if (user) {
-          return res.status(400).send(req.body.Username + ' already exists');
-        } else {
-          Users
-            .create({
-              Username: req.body.Username,
-              Password: req.body.Password,
-              Email: req.body.Email,
-              Birthday: req.body.Birthday
-            })
-            .then((user) =>{
-              res.status(201).json(user)
-             })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send('Error: ' + error);
-          })
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send('Error: ' + error);
-      });
-  });
+//using CORS
+const cors = require('cors');
+let allowedOrigins = [
+'http://localhost:8080', 
+'http://testsite.com'];
 
-  // Get all users
-app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.find()
-      .then((users) => {
-        res.status(201).json(users);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
-  });
-  // Get a user by username
-app.get('/users/:Username', (req, res) => {
-    Users.findOne({ Username: req.params.Username })
-      .then((user) => {
-        res.json(user);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
-  });
-//Update user information
-/* JSON in this format
-{
-  Username: String,
-  (required)
-  Password: String,
-  (required)
-  Email: String,
-  (required)
-  Birthday: Date
-}*/
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
-      {
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday
-      }
-    },
-    { new: true }, // This line makes sure that the updated document is returned
-    (err, updatedUser) => {
-      if(err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.json(updatedUser);
-      }
-    });
-  });
-//delete user
-app.delete("/users/:Username", passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOneAndRemove({ Username: req.params.Username})
-    .then((user) =>{
-    if (!user) {
-        res.status(400).send(req.params.Username + 'data was to found');
-    } else {
-        res.status(200).send(req.params.Username + 'data has been removed')
-      }
-    })
-    .catch((err)=>{
-      console.error(err);res.status(500).send('Error' + err);
-    });
-});
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+       let message = 'The CORS policy for this application does not allow found on the list of allowed origin' + origin;
+       return callback(new Error(message), false);
+  }
+  return callback(null, true);
+}
+}));
 
 app.get("/", (req, res) => {
     res.send("Please enjoy Studio Ghibli");
@@ -162,6 +88,113 @@ app.get("/directors/:directorName", passport.authenticate('jwt', { session: fals
     });
   });
 
+  //Create user
+app.post('/users',
+[
+  check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+],
+ (req, res) => {
+   let errors = validationResult(req);
+   if (!errors.isEmpty()){
+     return res.status(422).json({ errors: errors.array() });
+   }
+
+   let hashedPassword = Users.hashPassword(req.body.Password)
+    Users.findOne({ Username: req.body.Username })
+      .then((user) => {
+        if (user) {
+          return res.status(400).send(req.body.Username + ' already exists');
+        } else {
+          Users
+            .create({
+              Username: req.body.Username,
+              Password: hashedPassword,
+              Email: req.body.Email,
+              Birthday: req.body.Birthday
+            })
+            .then((user) =>{
+              res.status(201).json(user)
+             })
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+          })
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+  });
+
+  // Get all users
+app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Users.find()
+      .then((users) => {
+        res.status(201).json(users);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
+  // Get a user by username
+app.get('/users/:Username', (req, res) => {
+    Users.findOne({ Username: req.params.Username })
+      .then((user) => {
+        res.json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  });
+
+//Update user information
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), 
+[
+  check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+],
+(req, res) => {
+  let hashedPassword = Users.hashPassword(req.params.Password);
+    Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
+      {
+        Username: req.body.Username,
+        Password: hashedPassword,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      }
+    },
+    { new: true }, // This line makes sure that the updated document is returned
+    (err, updatedUser) => {
+      if(err) {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      } else {
+        res.json(updatedUser);
+      }
+    });
+  });
+//delete user
+app.delete("/users/:Username", passport.authenticate('jwt', { session: false }), (req, res) => {
+    Users.findOneAndRemove({ Username: req.params.Username})
+    .then((user) =>{
+    if (!user) {
+        res.status(400).send(req.params.Username + 'data was to found');
+    } else {
+        res.status(200).send(req.params.Username + 'data has been removed')
+      }
+    })
+    .catch((err)=>{
+      console.error(err);res.status(500).send('Error' + err);
+    });
+});
 //add favorite movie
 app.post("/users/:Username/movies/:MovieID", passport.authenticate('jwt', { session: false }), (req, res) => {
 
@@ -203,7 +236,7 @@ app.use((err, req, res, next) => {
     console,error(err.stack);
     res.status(500).send("Oops, something is not working right!");
 });
-
-app.listen(8080, () => {
-    console.log("Your app is listening on port 8080.")
+const port = process.env.PORT || 8080;
+app.listen('0.0.0.0', () => {
+    console.log('Listening on Port' + port);
 });
