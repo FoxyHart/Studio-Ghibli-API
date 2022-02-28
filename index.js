@@ -10,7 +10,8 @@ const Users = Models.User;
 
 const { check, validationResult } = require('express-validator');
 
-mongoose.connect('mongodb://localhost:27017/StudioGhibliDB', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect('mongodb://localhost:27017/StudioGhibliDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('process.env.CONNECTION_URI', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 app.use(morgan('common'));
@@ -240,3 +241,5 @@ const port = process.env.PORT || 8080;
 app.listen('0.0.0.0', () => {
     console.log('Listening on Port' + port);
 });
+
+//mongoimport --uri mongodb+srv://FaunaHart:Flora"&"Fauna@studioghiblidb.iagd8.mongodb.net/myFlixDB --collection StudioGhibliDBmovies --type json --file exported_collections/StudioGhibliDBmovies.json
