@@ -28,8 +28,6 @@ const cors = require('cors');
 
  let allowedOrigins = [
 'http://localhost:8080', 
-'http://testsite.com',
-'http://localhost',
 'http://localhost:1234',
 'https://studioghiblidb.herokuapp.com/'
 ];
@@ -44,7 +42,9 @@ app.use(cors({
   return callback(null, true);
 }
 }));
+
 //Middleware
+app.use(express.static('public'));
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -235,10 +235,6 @@ app.delete("/users/:Username/movies/:MovieID", passport.authenticate('jwt', { se
     }
   });
 });
-
-
-
-app.use(express.static("public"));
 
 app.use((err, req, res, next) => {
     console,error(err.stack);
