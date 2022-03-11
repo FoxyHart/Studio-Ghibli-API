@@ -15,10 +15,6 @@ mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifie
 
 const app = express();
 
-
-//use auth endpoints
-let auth = require('./auth')(app);
-
 //use passport after auth
 const passport = require('passport');
 require('./passport')
@@ -42,6 +38,9 @@ app.use(cors({
   return callback(null, true);
 }
 }));
+
+//use auth endpoints
+let auth = require('./auth')(app);
 
 //Middleware
 app.use(express.static('public'));
