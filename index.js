@@ -27,12 +27,13 @@ require('./passport')
 
 //using CORS
 const cors = require('cors');
-/* let allowedOrigins = [
+ let allowedOrigins = [
 'http://localhost:8080', 
 'http://testsite.com',
-'http://localhost:1234'];
-*/
-app.use(cors()); /*({
+'http://localhost:1234',
+'https://localhost:1234'];
+
+app.use(cors({
   origin: (origin, callback) => {
     if(!origin) return callback(null, true);
     if(allowedOrigins.indexOf(origin) === -1){
@@ -42,7 +43,7 @@ app.use(cors()); /*({
   return callback(null, true);
 }
 }));
-*/
+
 app.get("/", (req, res) => {
     res.send("Please enjoy Studio Ghibli");
 });
@@ -237,6 +238,7 @@ app.use(express.static("public"));
 app.use((err, req, res, next) => {
     console,error(err.stack);
     res.status(500).send("Oops, something is not working right!");
+    res.header("Access-Control-Allow-Origin", "*");
 });
 const PORT = process.env.PORT || 8080;
 /*app.listen('0.0.0.0', () => {
