@@ -31,7 +31,9 @@ app.use(cors());
 'http://localhost:8080', 
 'http://testsite.com',
 'http://localhost:1234',
-'https://localhost:1234'];
+'https://localhost:1234',
+'https://studioghiblidb.herokuapp.com/'
+];
 
 /*app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
