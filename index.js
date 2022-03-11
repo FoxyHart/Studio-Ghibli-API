@@ -25,21 +25,14 @@ require('./passport')
 
 //using CORS
 const cors = require('cors');
-app.use(cors());
 
  let allowedOrigins = [
 'http://localhost:8080', 
 'http://testsite.com',
+'http://localhost',
 'http://localhost:1234',
-'https://localhost:1234',
 'https://studioghiblidb.herokuapp.com/'
 ];
-
-/*app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header( "Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
-});*/
-
 
 app.use(cors({
   origin: (origin, callback) => {
