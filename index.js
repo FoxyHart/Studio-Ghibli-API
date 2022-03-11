@@ -14,9 +14,7 @@ const { check, validationResult } = require('express-validator');
 mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
-app.use(morgan('common'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
 
 //use auth endpoints
 let auth = require('./auth')(app);
@@ -27,11 +25,19 @@ require('./passport')
 
 //using CORS
 const cors = require('cors');
+app.use(cors());
+
  let allowedOrigins = [
 'http://localhost:8080', 
 'http://testsite.com',
 'http://localhost:1234',
 'https://localhost:1234'];
+
+/*app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header( "Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+});*/
+
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -43,6 +49,10 @@ app.use(cors({
   return callback(null, true);
 }
 }));
+//Middleware
+app.use(morgan('common'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
     res.send("Please enjoy Studio Ghibli");
@@ -238,7 +248,6 @@ app.use(express.static("public"));
 app.use((err, req, res, next) => {
     console,error(err.stack);
     res.status(500).send("Oops, something is not working right!");
-    res.header("Access-Control-Allow-Origin", "*");
 });
 const PORT = process.env.PORT || 8080;
 /*app.listen('0.0.0.0', () => {
