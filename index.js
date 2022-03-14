@@ -25,7 +25,7 @@ const cors = require('cors');
  let allowedOrigins = [
 'http://localhost:8080', 
 'http://localhost:1234',
-'https://studioghiblidb.herokuapp.com/'
+'http://testsite.com'
 ];
 
 app.use(cors({
@@ -115,8 +115,7 @@ app.post('/users',
         if (user) {
           return res.status(400).send(req.body.Username + ' already exists');
         } else {
-          Users
-            .create({
+          Users.create({
               Username: req.body.Username,
               Password: hashedPassword,
               Email: req.body.Email,
