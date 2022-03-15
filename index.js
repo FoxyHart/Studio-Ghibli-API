@@ -12,8 +12,13 @@ const { check, validationResult } = require('express-validator');
 
 //mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
 const app = express();
+
+//Middleware
+app.use(express.static('public'));
+app.use(morgan('common'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //using CORS
 const cors = require('cors');
@@ -37,12 +42,6 @@ app.use(cors({
 
 //use auth endpoints
 let auth = require('./auth')(app);
-
-//Middleware
-app.use(express.static('public'));
-app.use(morgan('common'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 //use passport after auth
 const passport = require('passport');
