@@ -239,10 +239,6 @@ app.use((err, req, res, next) => {
     res.status(500).send("Oops, something is not working right!");
 });
 const PORT = process.env.PORT || 8080;
-/*app.listen('0.0.0.0', () => {
-    console.log('Listening on Port' + port);
-});
-*/
 app.listen(PORT, () => {
   console.log(`Our app is running on port ${ PORT }`);
 });
