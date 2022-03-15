@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
     res.send("Please enjoy Studio Ghibli");
 });
 //return all movies
-app.get("/movies",  /*passport.authenticate('jwt', { session: false }),*/ (req, res) => {
+app.get("/movies", passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
     .then((movie)=>{
       res.status(201).json(movie);
