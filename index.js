@@ -15,10 +15,6 @@ mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifie
 
 const app = express();
 
-//use passport after auth
-const passport = require('passport');
-require('./passport')
-
 //using CORS
 const cors = require('cors');
 
@@ -47,6 +43,10 @@ app.use(express.static('public'));
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//use passport after auth
+const passport = require('passport');
+require('./passport')
 
 app.get("/", (req, res) => {
     res.send("Please enjoy Studio Ghibli");
