@@ -26,7 +26,8 @@ const cors = require('cors');
  let allowedOrigins = [
 'http://localhost:8080', 
 'http://localhost:1234',
-'http://testsite.com'
+'http://testsite.com',
+'https://monumental-sopapillas-96e9db.netlify.app',
 ];
 
 app.use(cors({
