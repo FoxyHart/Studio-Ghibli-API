@@ -27,7 +27,7 @@ const cors = require('cors');
 'http://localhost:8080', 
 'http://localhost:1234',
 'http://testsite.com',
-'https://monumental-sopapillas-96e9db.netlify.app',
+'mystudioghibliapp.netlify.app/',
 ];
 
 app.use(cors({
