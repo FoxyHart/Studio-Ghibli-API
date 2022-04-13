@@ -27,7 +27,7 @@ const cors = require('cors');
 'http://localhost:8080', 
 'http://localhost:1234',
 'http://testsite.com',
-'mystudioghibliapp.netlify.app/',
+'https://mystudioghibliapplication.netlify.app',
 ];
 
 app.use(cors({
